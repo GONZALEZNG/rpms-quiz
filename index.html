@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiz de démarrage : bilan et compte de résultat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f0e8; --card:#fffdf8; --text:#23201b; --muted:#6b645a; --line:#d9d2c3;
+  --accent:#c2410c; --accent-ink:#fff; --ok:#15803d; --okbg:#e3f4e8; --ko:#b91c1c; --kobg:#fbe6e4; --focus:#1d4ed8;
+  --hand:'Caveat Brush','Segoe Print','Comic Sans MS',cursive; --body:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#171b1e; --card:#20262a; --text:#f1efe8; --muted:#a8b0b3; --line:#38424a;
+    --accent:#ffb627; --accent-ink:#1a1405; --ok:#7ee0a0; --okbg:#173325; --ko:#ff8f8f; --kobg:#3a1d1d; --focus:#5ce1e6;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#171b1e; --card:#20262a; --text:#f1efe8; --muted:#a8b0b3; --line:#38424a;
+  --accent:#ffb627; --accent-ink:#1a1405; --ok:#7ee0a0; --okbg:#173325; --ko:#ff8f8f; --kobg:#3a1d1d; --focus:#5ce1e6;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.55;min-height:100vh}
+main{max-width:680px;margin:0 auto;padding:24px 18px 48px}
+h1,h2{font-family:var(--hand);font-weight:400;letter-spacing:.01em;line-height:1.1;margin:0}
+h1{font-size:clamp(2.2rem,7vw,3.2rem);color:var(--accent)}
+h2{font-size:clamp(1.5rem,4.5vw,1.9rem)}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px}
+.brand{font-family:var(--hand);font-size:1.3rem;color:var(--accent)}
+.theme{background:none;border:1px solid var(--line);color:var(--text);border-radius:999px;padding:6px 14px;font:inherit;font-size:.85rem;cursor:pointer}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 20px}
+p{margin:.6em 0}
+.muted{color:var(--muted)}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px;padding:12px 22px;font:inherit;font-weight:800;cursor:pointer;margin-top:14px}
+.btn.ghost{background:none;color:var(--text);border:1px solid var(--line)}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:6px 0 18px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:.88rem;color:var(--muted)}
+.opts{display:grid;gap:10px;margin:18px 0 0;padding:0;list-style:none}
+.opt{width:100%;text-align:left;background:var(--bg);color:var(--text);border:2px solid var(--line);border-radius:10px;padding:12px 14px;font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:var(--ok);background:var(--okbg)}
+.opt.ko{border-color:var(--ko);background:var(--kobg)}
+.fb{margin-top:16px;padding:14px 16px;border-radius:10px;border-left:5px solid var(--ok);background:var(--okbg)}
+.fb.ko{border-left-color:var(--ko);background:var(--kobg)}
+.fb strong{display:block;margin-bottom:2px}
+.score{font-family:var(--hand);font-size:3.4rem;color:var(--accent);line-height:1}
+.themes{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:8px}
+.themes li{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <span class="brand">Pizza Cosy</span>
+    <button class="theme" id="theme" type="button">Mode sombre</button>
+  </div>
+  <div id="app" class="card" aria-live="polite"></div>
+</main>
+<script>
+var Q=[
+{t:"Bilan et compte de résultat",q:"Quelle image résume le mieux la différence entre le bilan et le compte de résultat ?",o:["Le bilan est le film de l’année, le compte de résultat est la photo au 31 décembre","Le bilan est la photo du patrimoine à un instant T, le compte de résultat est le film de l’activité sur l’année","Ce sont deux noms pour le même document","Le bilan concerne les salaires, le compte de résultat concerne les stocks"],a:1,e:"Le bilan montre ce que l’entreprise possède et ce qu’elle doit à une date donnée. Le compte de résultat montre ce qui est rentré et sorti pendant toute l’année."},
+{t:"Résultat positif et négatif",q:"Que veut dire un résultat positif ?",o:["L’entreprise a plus de trésorerie qu’avant","Les produits sont supérieurs aux charges : l’entreprise a gagné plus d’argent qu’elle n’en a dépensé","L’entreprise n’a aucune dette","Les ventes ont augmenté par rapport à l’an dernier"],a:1,e:"Résultat positif = bénéfice. Il permet de réinvestir, de se constituer un matelas de sécurité et de garder la confiance des banques et des fournisseurs."},
+{t:"Résultat positif et négatif",q:"Le compte de résultat est négatif. Quelle est la bonne réaction du manager ?",o:["Attendre : cela se rétablira tout seul","Réagir vite : booster les ventes et chasser les coûts (gaspillage, planning, fournisseurs)","Cacher le chiffre aux équipes pour ne pas les inquiéter","Embaucher plus de personnel pour améliorer le service"],a:1,e:"Un résultat négatif est une urgence managériale. Si la perte dure, elle ronge la trésorerie et la confiance des partenaires. Les deux leviers : les ventes et les coûts."},
+{t:"EBE",q:"L’EBE (excédent brut d’exploitation) mesure…",o:["Le bénéfice final, après impôts et intérêts","La rentabilité de l’activité courante, avant amortissements, intérêts et impôt sur les bénéfices","L’argent disponible sur le compte en banque","La valeur totale du matériel de la pizzeria"],a:1,e:"L’EBE est un résultat intermédiaire : il dit si l’activité elle-même (ventes moins achats, charges externes, personnel) est rentable, avant les éléments financiers et fiscaux."},
+{t:"EBE",q:"Un événement coûte cher en décoration et en heures supplémentaires, mais la fréquentation est faible. Quel est l’effet le plus probable sur l’EBE ?",o:["L’EBE baisse, car les charges ont augmenté plus vite que le chiffre d’affaires","L’EBE augmente, car l’événement fait connaître la pizzeria","L’EBE ne change pas, car un événement est exceptionnel","L’EBE passe automatiquement dans le bilan"],a:0,e:"La déco (charges externes) et les heures supplémentaires (charges de personnel) pèsent sur l’EBE. Sans chiffre d’affaires en plus pour les couvrir, la rentabilité de l’activité diminue."},
+{t:"BFR",q:"Comment expliquer simplement le BFR (besoin en fonds de roulement) ?",o:["C’est le bénéfice de l’année","C’est l’argent que l’on avance pour faire tourner l’activité avant d’être payé par les clients","C’est le montant des emprunts à rembourser","C’est le capital apporté par les associés"],a:1,e:"On achète les stocks et on paie les salaires avant d’encaisser. Le BFR, c’est l’argent immobilisé dans les stocks et les créances clients, diminué des dettes fournisseurs."},
+{t:"BFR",q:"Pour un lancement de produit, la pizzeria achète beaucoup de nouveaux ingrédients, payables à 30 jours, et les stocke avant la première vente. Que se passe-t-il pour le BFR ?",o:["Il augmente temporairement, car du cash est immobilisé dans les stocks","Il disparaît","Il devient forcément négatif","Il n’a aucun lien avec les stocks"],a:0,e:"Les stocks montent et le crédit fournisseur ne couvre pas tout le besoin. L’enjeu : écouler vite les stocks pour libérer du cash et éviter de gâcher de la marchandise périssable."},
+{t:"Charges de personnel",q:"Où retrouve-t-on les salaires des équipiers et les cotisations patronales ?",o:["Dans le compte de résultat, parmi les charges de personnel","Dans l’actif du bilan, parmi les immobilisations","Dans le chiffre d’affaires","Dans les capitaux propres"],a:0,e:"Les charges de personnel (salaires bruts, charges sociales patronales, heures supplémentaires, avantages) sont des charges d’exploitation, déduites du chiffre d’affaires."},
+{t:"Charges de personnel",q:"Pourquoi faut-il surveiller de près les charges de personnel dans un restaurant ?",o:["Parce que c’est un petit poste sans enjeu","Parce que c’est souvent le plus gros poste de dépenses, rigide, et qu’il faut ajuster les plannings aux pics d’affluence","Parce qu’elles n’ont aucun impact sur la rentabilité","Parce qu’elles sont payées une fois par an"],a:1,e:"Trop d’heures par rapport aux ventes fait perdre de l’argent, trop peu dégrade le service. Le turn-over coûte aussi cher, et cette charge est difficile à réduire rapidement."},
+{t:"Résultat et trésorerie",q:"La pizzeria affiche un résultat positif. Peut-on en déduire qu’elle a beaucoup de trésorerie ?",o:["Oui, résultat et trésorerie sont la même chose","Non, le cash peut être immobilisé dans les stocks et les créances (BFR) ou utilisé pour rembourser des dettes","Oui, sauf si le bilan est négatif","Non, car un résultat positif est toujours artificiel"],a:1,e:"Le résultat se lit dans le compte de résultat, la trésorerie dans le bilan. Une entreprise peut être bénéficiaire et manquer de cash : le dirigeant regarde donc les deux documents ensemble."}
+];
+var app=document.getElementById("app"),i=0,score=0,res=[];
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function start(){i=0;score=0;res=[];
+  app.innerHTML='<h1>Quiz de démarrage</h1><p>10 questions, sans calcul, pour réactiver les notions clés : bilan, compte de résultat, résultat positif ou négatif, EBE, BFR et charges de personnel.</p><p class="muted">Pas de note : ce quiz sert à repérer ce qui est solide et ce qu’on revoit ensemble.</p><button class="btn" id="go" type="button">Commencer</button>';
+  document.getElementById("go").onclick=show}
+function show(){var x=Q[i];
+  var h='<div class="meta"><span>Question '+(i+1)+' sur '+Q.length+'</span><span>'+esc(x.t)+'</span></div><div class="bar"><i style="width:'+(i/Q.length*100)+'%"></i></div><h2>'+esc(x.q)+'</h2><ul class="opts">';
+  x.o.forEach(function(t,k){h+='<li><button type="button" class="opt" data-k="'+k+'">'+esc(t)+'</button></li>'});
+  h+='</ul><div id="fb"></div>';
+  app.innerHTML=h;
+  app.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){answer(+b.dataset.k)}})}
+function answer(k){var x=Q[i],good=k===x.a;
+  if(good)score++;res.push({t:x.t,g:good});
+  app.querySelectorAll(".opt").forEach(function(b,n){b.disabled=true;if(n===x.a)b.classList.add("ok");else if(n===k)b.classList.add("ko")});
+  var last=i===Q.length-1;
+  document.getElementById("fb").innerHTML='<div class="fb'+(good?'':' ko')+'"><strong>'+(good?'Bonne réponse.':'Pas tout à fait.')+'</strong>'+esc(x.e)+'</div><button class="btn" id="nx" type="button">'+(last?'Voir mon résultat':'Question suivante')+'</button>';
+  var n=document.getElementById("nx");n.focus();
+  n.onclick=function(){if(last)end();else{i++;show();window.scrollTo(0,0)}}}
+function end(){
+  var lvl=score<=4?"À reconstruire : on reprend les bases ensemble.":score<=7?"Acquis fragile : quelques notions à consolider.":"Solide : vous êtes prêt à appliquer ces notions à votre projet.";
+  var by={},order=[];res.forEach(function(r){if(!by[r.t]){by[r.t]={g:0,n:0};order.push(r.t)}by[r.t].n++;if(r.g)by[r.t].g++});
+  var h='<h2>Votre résultat</h2><p class="score">'+score+' / '+Q.length+'</p><p>'+lvl+'</p><ul class="themes">';
+  order.forEach(function(t){h+='<li><span>'+esc(t)+'</span><strong>'+by[t].g+' / '+by[t].n+'</strong></li>'});
+  h+='</ul><button class="btn" id="rs" type="button">Recommencer</button>';
+  app.innerHTML=h;document.getElementById("rs").onclick=start;window.scrollTo(0,0)}
+var tb=document.getElementById("theme"),root=document.documentElement;
+function dark(){var t=root.getAttribute("data-theme");return t?t==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches}
+function label(){tb.textContent=dark()?"Mode clair":"Mode sombre"}
+tb.onclick=function(){root.setAttribute("data-theme",dark()?"light":"dark");label()};
+label();start();
+</script>
+</body>
+</html>
